@@ -35,9 +35,23 @@
        (edn/read-string)
        (into {})))
 
+(defn node-env
+  [key]
+  (let [value (aget js/process.env (name (keyword key)))]
+    (if (= value js/undefined)
+      ::not-found
+      value)))
+
+(defn resolve-var
+  [key]
+  (let [value (get env (keyword key) ::not-found)]
+    (if (= value ::not-found)
+      (node-env key)
+      value)))
+
 (defn optional
   [key default]
-  (let [value (get env (keyword key) ::not-found)]
+  (let [value (resolve-var key)]
     (if (= value ::not-found)
       (do
         (js/console.warn (str "Optional: Could not find ENV var " key))
@@ -46,7 +60,7 @@
 
 (defn required
   [key]
-  (let [value (get env (keyword key) ::not-found)]
+  (let [value (resolve-var key)]
     (when (= value ::not-found)
       (throw (js/Error. (str "Required: Could not find ENV var " key))))
     value))
