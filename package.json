@@ -7,5 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "baconjs": "^3.0.17",
+    "express": "^4.18.2",
+    "nbb": "^1.2.174",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
 }
