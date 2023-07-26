@@ -20,10 +20,17 @@
        :body (get-in req [:body :challenge])}
       (handler req))))
 
+(defn wrap-logger
+  [handler]
+  (fn [req]
+    (pprint req)
+    (handler req)))
+
 (defn middleware
   []
   (p/-> (#'mw/wrap-default-view)
         (#'mw/wrap-router)
+        (#'wrap-logger)
         (#'wrap-slack-challenge)
         (#'mw/wrap-static "public")
         (#'mw/wrap-json)
