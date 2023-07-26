@@ -1,5 +1,8 @@
 (ns framework.server
-  (:require [promesa.core :as p]))
+  (:require
+    [promesa.core :as p]
+    ["stream" :as stream]
+    ["express$default" :as express]))
 
 (defn str->url [url-str] (js/URL. (str "http://" url-str)))
 
@@ -28,6 +31,7 @@
 (defn server
   [app handler]
   (-> app
+      (.use (.text express #js {:type #js ["application/json" "text/plain" "application/x-www-form-urlencoded"]}))
       (.use (fn [req res _next]
               (-> (p/let [req (req->hash-map req)
                           res-map (handler req)]

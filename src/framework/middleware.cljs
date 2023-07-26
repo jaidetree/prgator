@@ -63,7 +63,7 @@
 
 (defn json-header?
   [req]
-  (= (get-in req [:headers "Content-Type"]) "application/json"))
+  (= (get-in req [:headers "content-type"]) "application/json"))
 
 (defn json->clj
   [body]
