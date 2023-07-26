@@ -61,9 +61,13 @@
              :body contents})
           (handler req))))))
 
-(defn json-header?
+(defn json-req-header?
   [req]
   (= (get-in req [:headers "content-type"]) "application/json"))
+
+(defn json-res-header?
+  [req]
+  (= (get-in req [:headers "Content-Type"]) "application/json"))
 
 (defn json->clj
   [body]
@@ -80,9 +84,9 @@
 (defn wrap-json
   [handler]
   (fn [req]
-    (p/let [req (if (json-header? req) (update req :body json->clj) req)
+    (p/let [req (if (json-req-header? req) (update req :body json->clj) req)
             res (handler req)]
-      (if (json-header? res) (update res :body clj->json) res))))
+      (if (json-res-header? res) (update res :body clj->json) res))))
 
 (defn wrap-router
   [handler]
